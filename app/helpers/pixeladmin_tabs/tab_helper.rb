@@ -1,17 +1,18 @@
 module PixeladminTabs::TabHelper
-  def tabs_for partial_path:, html: nil, &block
-    TabCollection.new(self, partial_path: partial_path, html: html).render(&block)
+  def tabs_for partial_path:, html: nil, prerender_tabs: true, &block
+    TabCollection.new(self, partial_path: partial_path, html: html, prerender_tabs: prerender_tabs).render(&block)
   end
 
   class TabCollection
     delegate :content_tag, :link_to, :t, to: :view_context
-    attr_reader :tabs, :view_context, :partial_path, :html
+    attr_reader :tabs, :view_context, :partial_path, :html, :prerender_tabs
 
-    def initialize(view_context, partial_path:, html: nil)
+    def initialize(view_context, partial_path:, html: nil, prerender_tabs: prerender_tabs)
       @view_context = view_context
       @partial_path = partial_path
       @html = html || {}
       @tabs = []
+      @prerender_tabs = prerender_tabs
     end
 
     def add name, locals: {}, link: nil, active: nil, &block
@@ -36,7 +37,8 @@ module PixeladminTabs::TabHelper
     end
 
     def render_tab_content
-      tabs.select(&:active?).map do |tab|
+      tabs_to_render = tabs.select{ |tab| prerender_tabs || tab.active? }
+      tabs_to_render.map do |tab|
         style = tab.active? ? '' : 'display: none;'
         content_tag :div, class: "tab-content tab-#{tab.name}", style: style, data: { tab: tab.name } do
           view_context.render "#{partial_path}#{tab.name}", tab.locals
