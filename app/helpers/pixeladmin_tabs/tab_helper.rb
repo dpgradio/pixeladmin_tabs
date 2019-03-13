@@ -7,7 +7,7 @@ module PixeladminTabs::TabHelper
     delegate :content_tag, :link_to, :t, to: :view_context
     attr_reader :tabs, :view_context, :partial_path, :html, :prerender_tabs
 
-    def initialize(view_context, partial_path:, html: nil, prerender_tabs: prerender_tabs)
+    def initialize(view_context, partial_path:, html: nil, prerender_tabs: nil)
       @view_context = view_context
       @partial_path = partial_path
       @html = html || {}
