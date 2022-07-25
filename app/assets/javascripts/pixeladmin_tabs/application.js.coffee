@@ -30,3 +30,9 @@ indicateErrorsInTabButton = ->
 $ ->
   return unless $('[data-show-tab]')[0]
   indicateErrorsInTabButton()
+
+  # Select the tab passed in the URL
+  if window.location.hash
+    tab = window.location.hash.replace('#', '')
+    $("[data-show-tab=#{tab}]").click()
+  end
