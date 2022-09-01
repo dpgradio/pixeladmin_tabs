@@ -35,4 +35,3 @@ $ ->
   if window.location.hash
     tab = window.location.hash.replace('#', '')
     $("[data-show-tab=#{tab}]").click()
-  end
